@@ -90,7 +90,7 @@ $all_tickets = Get-Alltickets -cwm_tickets ($all_tickets=@()) -enteredby "_info/
 $all_tickets = Get-Alltickets -cwm_tickets $all_tickets -enteredby "_info/enteredby='nocAPI'" -header $headers
 
 foreach($ticket in $all_tickets){
-    if($dsd_hash.ContainsKey($ticket.company.id) -and $dsd_hash[$ticket.company.id] -ne $ticket.board.id){
+    if($ticket -and $dsd_hash.ContainsKey($ticket.company.id) -and $dsd_hash[$ticket.company.id] -ne $ticket.board.id){
         $dsd_board=Get-Board -api_call "https://api-eu.myconnectwise.net/v4_6_release/apis/3.0/service/boards/$($dsd_hash[$ticket.company.id])" -header $headers
         Update-Ticket -ticket_id $ticket.id -board $dsd_board.id -header $headers
     }
