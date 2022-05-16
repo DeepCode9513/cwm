@@ -28,15 +28,15 @@ function Get-Alltickets(){
     $ASSTickets = CWMtickets -enteredby $enteredby -Status 'Assigned' -header $header
     $WAVTickets = CWMtickets -enteredby $enteredby -Status 'Waiting on Vendor' -header $header
     $ESCTickets = CWMtickets -enteredby $enteredby -Status 'Escalate' -header $header
-    $cwm_tickets += $new_cwm_tickets
-    $cwm_tickets += $pgr_cwm_tickets
-    $cwm_tickets += $hld_cwm_tickets
-    $cwm_tickets += $wcr_cwm_tickets
-    $cwm_tickets += $SCHTickets
-    $cwm_tickets += $ASSTickets
-    $cwm_tickets += $WAVTickets
-    $cwm_tickets += $REOTickets
-    $cwm_tickets += $ESCTickets
+    if($new_cwm_tickets){$cwm_tickets += $new_cwm_tickets}
+    if($pgr_cwm_tickets){$cwm_tickets += $pgr_cwm_tickets}
+    if($hld_cwm_tickets){$cwm_tickets += $hld_cwm_tickets}
+    if($wcr_cwm_tickets){$cwm_tickets += $wcr_cwm_tickets}
+    if($SCHTickets){$cwm_tickets += $SCHTickets}
+    if($ASSTickets){$cwm_tickets += $ASSTickets}
+    if($WAVTickets){$cwm_tickets += $WAVTickets}
+    if($REOTickets){$cwm_tickets += $REOTickets}
+    if($ESCTickets){$cwm_tickets += $ESCTickets}
     return $cwm_tickets
 }
 function Get-Board(){
@@ -79,7 +79,7 @@ function CWMtickets() {
     return $response | ConvertTo-Json -Depth 10 | ConvertFrom-Json 
 }
 
-#hashkey{client_id,board_id}
+#hashkey{client_id,board_id}.
 $dsd_hash=@{20382=48;19348=41;20840=49;20667=42;20051=45;20539=46}
 CWMconnect
 $headers = New-Object "System.Collections.Generic.Dictionary[[String],[String]]"
@@ -90,7 +90,7 @@ $all_tickets = Get-Alltickets -cwm_tickets ($all_tickets=@()) -enteredby "_info/
 $all_tickets = Get-Alltickets -cwm_tickets $all_tickets -enteredby "_info/enteredby='nocAPI'" -header $headers
 
 foreach($ticket in $all_tickets){
-    if($ticket -and $dsd_hash.ContainsKey($ticket.company.id) -and $dsd_hash[$ticket.company.id] -ne $ticket.board.id){
+    if($dsd_hash.ContainsKey($ticket.company.id) -and $dsd_hash[$ticket.company.id] -ne $ticket.board.id){
         $dsd_board=Get-Board -api_call "https://api-eu.myconnectwise.net/v4_6_release/apis/3.0/service/boards/$($dsd_hash[$ticket.company.id])" -header $headers
         Update-Ticket -ticket_id $ticket.id -board $dsd_board.id -header $headers
     }
