@@ -87,7 +87,7 @@ $headers.Add("Authorization", "Basic dHVycml0bytwRkNIZ0Q3M0dWWU1SckJkOlgzZEF1QVp
 #Had to call this function twice because I couldnt make -or condition to work
 $all_tickets = Get-Alltickets -cwm_tickets ($all_tickets=@()) -enteredby "_info/enteredby='Automate'" -header $headers
 $all_tickets = Get-Alltickets -cwm_tickets $all_tickets -enteredby "_info/enteredby='nocAPI'" -header $headers
-$header.Add("Content-Type", "application/json")
+$headers.Add("Content-Type", "application/json")
 
 foreach($ticket in $all_tickets){
     if($dsd_hash.ContainsKey($ticket.company.id) -and $dsd_hash[$ticket.company.id] -ne $ticket.board.id){
