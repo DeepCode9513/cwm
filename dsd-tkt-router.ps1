@@ -11,7 +11,7 @@ function Update-Ticket(){
         `n    `"value`": {`"id`": $board}
         `n  }
         `n]"
-        $response = Invoke-RestMethod "https://api-eu.myconnectwise.net/v4_6_release/apis/3.0/service/tickets/$ticket_id" -Method 'PATCH' -Headers $headers -Body $body
+        $response = Invoke-RestMethod "https://api-eu.myconnectwise.net/v4_6_release/apis/3.0/service/tickets/$ticket_id" -Method 'PATCH' -Headers $header -Body $body
         $response | ConvertTo-Json
 }
 function Get-Alltickets(){
