@@ -87,12 +87,13 @@ $headers.Add("Authorization", "Basic dHVycml0bytwRkNIZ0Q3M0dWWU1SckJkOlgzZEF1QVp
 #Had to call this function twice because I couldnt make -or condition to work
 $all_tickets = Get-Alltickets -cwm_tickets ($all_tickets=@()) -enteredby "_info/enteredby='Automate'" -header $headers
 $all_tickets = Get-Alltickets -cwm_tickets $all_tickets -enteredby "_info/enteredby='nocAPI'" -header $headers
-$headers.Add("Content-Type", "application/json")
+$patchHeader=$headers
+$patchHeader.Add("Content-Type", "application/json")
 
 foreach($ticket in $all_tickets){
     if($dsd_hash.ContainsKey([int]$ticket.company.id) -and $dsd_hash[[int]$ticket.company.id] -ne [int]$ticket.board.id){
         $dsd_board=Get-Board -api_call "https://api-eu.myconnectwise.net/v4_6_release/apis/3.0/service/boards/$($dsd_hash[$ticket.company.id])" -header $headers
-        Update-Ticket -ticket_id $ticket.id -board $dsd_board.id -header $headers
+        Update-Ticket -ticket_id $ticket.id -board $dsd_board.id -header $patchHeader
     }
 }
 
