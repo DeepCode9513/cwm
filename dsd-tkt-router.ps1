@@ -92,7 +92,7 @@ $patchHeader.Add("Content-Type", "application/json")
 
 foreach($ticket in $all_tickets){
     if($dsd_hash.ContainsKey([int]$ticket.company.id) -and $dsd_hash[[int]$ticket.company.id] -ne [int]$ticket.board.id){
-        $dsd_board=Get-Board -api_call "https://api-eu.myconnectwise.net/v4_6_release/apis/3.0/service/boards/$($dsd_hash[$ticket.company.id])" -header $headers
+        $dsd_board=Get-Board -api_call "https://api-eu.myconnectwise.net/v4_6_release/apis/3.0/service/boards/$($dsd_hash[[int]$ticket.company.id])" -header $headers
         Update-Ticket -ticket_id $ticket.id -board $dsd_board.id -header $patchHeader
     }
 }
